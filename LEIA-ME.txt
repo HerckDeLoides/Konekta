@@ -1,0 +1,29 @@
+KONEKTA PWA — COMO PUBLICAR E INSTALAR
+
+O que é:
+Esta pasta transforma o protótipo HTML numa PWA (Progressive Web App), que pode ser instalada no ecrã inicial do Android a partir de um endereço HTTPS.
+
+IMPORTANTE:
+- Isto ainda não é um APK independente da Play Store.
+- Para a instalação PWA, os ficheiros precisam de estar publicados num site HTTPS.
+- Os anúncios e o perfil continuam guardados apenas no navegador/dispositivo; não são partilhados online.
+- Os perfis incluídos são dados de demonstração.
+
+PASSOS NO TELEMÓVEL:
+1. Extrai o ZIP para uma pasta, se a aplicação de ficheiros permitir.
+2. Abre o GitHub no navegador e cria uma conta, se ainda não tiveres.
+3. Cria um repositório novo chamado konekta (pode ser público).
+4. Carrega os quatro ficheiros desta pasta: index.html, manifest.webmanifest, service-worker.js e icon.svg.
+5. Nas definições do repositório, abre Pages e escolhe publicar a partir da branch principal (main) e da pasta raiz (/root).
+6. Espera o GitHub Pages gerar o endereço HTTPS.
+7. Abre esse endereço no Chrome do Android.
+8. No menu ⋮ do Chrome, escolhe “Instalar app” ou “Adicionar ao ecrã principal”.
+9. Abre a Konekta pelo novo ícone.
+
+Se o menu não mostrar instalação:
+- Confirma que o endereço começa por https://.
+- Confirma que os quatro ficheiros estão na raiz do site.
+- Reabre o endereço no Chrome e aguarda alguns segundos.
+
+Para criar um APK verdadeiro:
+Será necessário um processo de compilação Android (por exemplo, Capacitor com Android Studio ou um serviço de build na nuvem). Este ZIP sozinho não gera um APK.

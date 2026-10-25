@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#123b35">
+<title>Konekta — Serviços perto de ti</title>
+<style>
+:root{--green:#123b35;--lime:#d8f36a;--bg:#f5f7f4;--card:#fff;--muted:#69756f;--line:#e5eae5;--ink:#17231e}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:var(--ink)}button,input,select,textarea{font:inherit}button{cursor:pointer}.app{max-width:520px;margin:auto;min-height:100dvh;background:var(--bg);padding-bottom:88px}.top{background:var(--green);color:white;padding:20px 18px 22px;border-radius:0 0 25px 25px}.brandrow{display:flex;align-items:center;justify-content:space-between}.brand{font-size:23px;font-weight:850;letter-spacing:-.7px}.brand span{color:var(--lime)}.tag{font-size:12px;color:#d7e6df;margin-top:2px}.avatarbtn{border:1px solid #ffffff45;background:#ffffff12;color:white;border-radius:50%;width:42px;height:42px;font-size:19px}.welcome{margin:24px 0 14px;font-size:25px;line-height:1.16;font-weight:800;letter-spacing:-.6px}.welcome small{display:block;font-size:14px;font-weight:400;color:#d5e2dc;margin-top:8px;letter-spacing:0}.searchbox{display:flex;gap:8px;background:white;border-radius:14px;padding:7px 8px 7px 13px;align-items:center}.searchbox input{border:0;outline:0;min-width:0;flex:1;color:var(--ink);font-size:14px}.searchbox button{background:var(--lime);border:0;border-radius:10px;padding:10px 13px;font-weight:750;color:var(--green)}.content{padding:19px 16px}.sectionhead{display:flex;align-items:center;justify-content:space-between;margin:2px 0 12px}.sectionhead h2{font-size:17px;margin:0;letter-spacing:-.3px}.subtle{font-size:12px;color:var(--muted)}.categories{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.cat{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:13px 8px;text-align:center;color:var(--ink);font-size:12px;font-weight:650}.cat .emoji{display:block;font-size:24px;margin-bottom:7px}.cat.active{border-color:var(--green);background:#eaf1e9;box-shadow:inset 0 0 0 1px var(--green)}.list{display:grid;gap:11px}.pro{background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;display:flex;gap:12px;align-items:flex-start}.photo{width:58px;height:58px;flex-shrink:0;border-radius:15px;background:#e8efe8;display:grid;place-items:center;font-size:27px}.probody{flex:1;min-width:0}.pro h3{font-size:15px;margin:1px 0 3px}.pro .job{font-size:12px;color:var(--muted)}.zone{font-size:12px;margin-top:7px;color:#4e5d55}.price{font-size:13px;font-weight:800;margin-top:7px}.proactions{display:flex;gap:7px;margin-top:10px;flex-wrap:wrap}.smallbtn{border:0;border-radius:9px;padding:8px 10px;font-size:12px;font-weight:750}.whatsapp{background:#dcf8e8;color:#12653b}.outline{background:#f2f5f1;color:var(--green)}.empty{border:1px dashed #cbd5cd;border-radius:16px;padding:22px;text-align:center;color:var(--muted);font-size:13px}.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;display:grid;grid-template-columns:repeat(4,1fr);background:#fff;border-top:1px solid var(--line);padding:9px 6px calc(9px + env(safe-area-inset-bottom));z-index:5}.nav{background:none;border:0;color:#718078;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:4px}.nav b{font-size:19px;font-weight:500}.nav.active{color:var(--green);font-weight:800}.nav.active b{color:var(--green)}.page{display:none}.page.active{display:block}.formcard{background:white;border:1px solid var(--line);border-radius:17px;padding:16px}.formcard h2{font-size:19px;margin:0 0 5px}.formcard p{font-size:13px;color:var(--muted);margin:0 0 16px}.field{display:grid;gap:6px;margin:12px 0}.field label{font-size:12px;font-weight:750;color:#46534b}.field input,.field select,.field textarea{width:100%;border:1px solid #dbe3dc;border-radius:11px;background:white;padding:12px;outline-color:#7e9b8a}.field textarea{resize:vertical;min-height:75px}.primary{border:0;border-radius:12px;background:var(--green);color:white;font-weight:800;padding:13px 15px;width:100%;margin-top:7px}.secondary{border:1px solid var(--line);background:white;color:var(--green);font-weight:750;border-radius:11px;padding:10px 12px}.notice{font-size:12px;line-height:1.5;color:#58665d;background:#eef3ed;border-radius:12px;padding:11px;margin-top:12px}.pill{display:inline-block;font-size:10px;border-radius:20px;padding:4px 7px;background:#fff3d8;color:#805a0b;font-weight:800}.profiletop{text-align:center;padding:20px 10px}.bigavatar{width:82px;height:82px;border-radius:24px;background:#e4ece4;display:grid;place-items:center;font-size:38px;margin:0 auto 10px}.profiletop h2{margin:0;font-size:20px}.profiletop p{margin:5px 0;color:var(--muted);font-size:13px}.profileactions{display:grid;gap:9px;margin-top:16px}.hidden{display:none!important}.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#17231e;color:white;padding:11px 16px;border-radius:12px;font-size:13px;z-index:10;max-width:90%;box-shadow:0 5px 20px #0002}
+</style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Konekta">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+
+</head>
+<body>
+<div class="app">
+<header class="top">
+ <div class="brandrow"><div><div class="brand">Konekta<span>.</span></div><div class="tag">Serviços perto de ti</div></div><button class="avatarbtn" onclick="showPage('account')" aria-label="Conta">♙</button></div>
+ <div class="welcome">Encontra quem resolve.<small>Profissionais e serviços num só lugar.</small></div>
+ <div class="searchbox"><span>⌕</span><input id="search" placeholder="Que serviço procuras?" oninput="renderPros()"><button onclick="showPage('home');renderPros()">Pesquisar</button></div>
+</header>
+<main class="content">
+<section id="page-home" class="page active">
+ <div class="sectionhead"><h2>Explora categorias</h2><span class="subtle">Ver serviços</span></div>
+ <div class="categories" id="categories"></div>
+ <div class="sectionhead" style="margin-top:24px"><h2 id="proTitle">Profissionais em destaque</h2><span class="subtle" id="proCount"></span></div>
+ <div class="list" id="pros"></div>
+ <div class="notice">ℹ️ Os perfis apresentados inicialmente são exemplos de demonstração. Confirma sempre a identidade, o preço e as referências antes de contratar.</div>
+</section>
+<section id="page-categories" class="page">
+ <div class="sectionhead"><h2>Todas as categorias</h2></div><div class="categories" id="categories2"></div>
+ <div class="notice">Escolhe uma categoria para filtrar os profissionais disponíveis.</div>
+</section>
+<section id="page-publish" class="page">
+ <div class="formcard"><h2>Publicar serviço</h2><p>Apresenta o teu trabalho a novos clientes.</p>
+ <form id="adForm">
+ <div class="field"><label for="adName">Nome do profissional / negócio</label><input id="adName" required placeholder="Ex.: João Serviços"></div>
+ <div class="field"><label for="adJob">Especialidade</label><input id="adJob" required placeholder="Ex.: Reparação de computadores"></div>
+ <div class="field"><label for="adCategory">Categoria</label><select id="adCategory" required></select></div>
+ <div class="field"><label for="adZone">Zona / município</label><input id="adZone" required placeholder="Ex.: Luanda, Maianga"></div>
+ <div class="field"><label for="adPhone">WhatsApp (com indicativo do país)</label><input id="adPhone" required inputmode="tel" placeholder="Ex.: 2449XXXXXXXX"></div>
+ <div class="field"><label for="adPrice">Preço indicativo (Kz)</label><input id="adPrice" inputmode="numeric" placeholder="Ex.: 10000"></div>
+ <div class="field"><label for="adDesc">Descrição do serviço</label><textarea id="adDesc" placeholder="Explica o que fazes, experiência e horários."></textarea></div>
+ <button class="primary" type="submit">Publicar anúncio de demonstração</button>
+ </form><div class="notice">Nesta versão inicial, o anúncio fica guardado apenas neste navegador. Ainda não é publicado na internet para outros utilizadores.</div>
+ </div>
+</section>
+<section id="page-account" class="page">
+ <div class="formcard" id="authCard"><h2>Entrar ou criar conta</h2><p>Escolhe como queres usar a Konekta.</p>
+ <form id="authForm">
+ <div class="field"><label for="userName">Nome</label><input id="userName" required placeholder="O teu nome"></div>
+ <div class="field"><label for="userPhone">Número de telefone</label><input id="userPhone" required inputmode="tel" placeholder="Ex.: 2449XXXXXXXX"></div>
+ <div class="field"><label for="userRole">Quero usar a Konekta como</label><select id="userRole"><option value="Cliente">Cliente — procurar serviços</option><option value="Profissional">Profissional — anunciar serviços</option></select></div>
+ <button class="primary" type="submit">Continuar</button>
+ </form><div class="notice">Demonstração: não existe ainda autenticação segura nem conta online. Não introduzas palavras-passe nem dados sensíveis.</div>
+ </div>
+ <div class="formcard hidden" id="signedCard"><div class="profiletop"><div class="bigavatar">👤</div><h2 id="signedName"></h2><p id="signedRole"></p><p id="signedPhone"></p></div><div class="profileactions"><button class="primary" onclick="showPage('publish')">Publicar um serviço</button><button class="secondary" onclick="logout()">Terminar sessão neste dispositivo</button></div></div>
+</section>
+</main>
+<nav class="bottom">
+ <button class="nav active" data-page="home" onclick="showPage('home')"><b>⌂</b>Início</button>
+ <button class="nav" data-page="categories" onclick="showPage('categories')"><b>▦</b>Categorias</button>
+ <button class="nav" data-page="publish" onclick="showPage('publish')"><b>＋</b>Publicar</button>
+ <button class="nav" data-page="account" onclick="showPage('account')"><b>♙</b>Perfil</button>
+</nav>
+</div>
+<div id="toast" class="toast hidden"></div>
+<script>
+const cats=[
+ {name:"Informática",icon:"💻"},{name:"Eletricidade",icon:"⚡"},{name:"Canalização",icon:"🔧"},
+ {name:"Beleza",icon:"💇"},{name:"Música",icon:"🎵"},{name:"Mecânica",icon:"🚗"},
+ {name:"Design",icon:"🎨"},{name:"Fotografia",icon:"📸"},{name:"Construção",icon:"🧱"},
+ {name:"Limpeza",icon:"🧹"},{name:"Explicações",icon:"📚"},{name:"Outros",icon:"🧰"}
+];
+const seed=[
+ {id:1,name:"Carlos Tech (exemplo)",job:"Reparação de computadores",category:"Informática",zone:"Luanda",phone:"244900000001",price:"A combinar",emoji:"💻",desc:"Diagnóstico e manutenção de computadores."},
+ {id:2,name:"Mário Electricista (exemplo)",job:"Instalações elétricas",category:"Eletricidade",zone:"Luanda",phone:"244900000002",price:"Desde 5.000 Kz",emoji:"⚡",desc:"Instalações e pequenas reparações."},
+ {id:3,name:"Ana Beauty (exemplo)",job:"Cabelo e maquilhagem",category:"Beleza",zone:"Viana",phone:"244900000003",price:"A combinar",emoji:"💇",desc:"Serviços de beleza mediante marcação."},
+ {id:4,name:"Studio Som (exemplo)",job:"Gravação e produção musical",category:"Música",zone:"Luanda",phone:"244900000004",price:"A combinar",emoji:"🎵",desc:"Gravação e produção musical."}
+];
+let selectedCategory="Todas";
+let ads=JSON.parse(localStorage.getItem("konekta_ads")||"[]");
+let user=JSON.parse(localStorage.getItem("konekta_user")||"null");
+const allPros=()=>[...ads,...seed];
+function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.remove("hidden");setTimeout(()=>el.classList.add("hidden"),2600)}
+function drawCategories(target){document.getElementById(target).innerHTML=cats.map(c=>`<button class="cat ${selectedCategory===c.name?'active':''}" onclick="filterCategory('${c.name}')"><span class="emoji">${c.icon}</span>${c.name}</button>`).join("")}
+function filterCategory(name){selectedCategory=name;drawCategories("categories");drawCategories("categories2");document.getElementById("proTitle").textContent=name==="Todas"?"Profissionais em destaque":name;showPage("home");renderPros()}
+function renderPros(){const q=document.getElementById("search").value.trim().toLowerCase();let list=allPros().filter(p=>(selectedCategory==="Todas"||p.category===selectedCategory)&&[p.name,p.job,p.category,p.zone,p.desc].join(" ").toLowerCase().includes(q));document.getElementById("proCount").textContent=list.length+" resultado(s)";const root=document.getElementById("pros");if(!list.length){root.innerHTML='<div class="empty">Ainda não encontrámos profissionais com esses critérios.<br><br>Experimenta outra pesquisa ou publica um serviço.</div>';return}root.innerHTML=list.map(p=>`<article class="pro"><div class="photo">${escapeHtml(p.emoji||"🧰")}</div><div class="probody"><h3>${escapeHtml(p.name)}</h3><div class="job">${escapeHtml(p.job)} · ${escapeHtml(p.category)}</div><div class="zone">📍 ${escapeHtml(p.zone)}</div><div class="price">${escapeHtml(p.price||"Preço a combinar")}</div><div class="proactions"><button class="smallbtn whatsapp" onclick="contact('${String(p.phone).replace(/'/g,"")}','${escapeHtml(p.name).replace(/'/g,"")}')">WhatsApp ↗</button><button class="smallbtn outline" onclick="details(${Number(p.id)})">Detalhes</button></div></div></article>`).join("")}
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function contact(phone,name){const clean=String(phone||"").replace(/\D/g,"");if(clean.length<9||/^24490000000[1-4]$/.test(clean)){toast("Este é um contacto de demonstração. Adiciona um número real no anúncio.");return}window.open("https://wa.me/"+clean+"?text="+encodeURIComponent("Olá "+name+", encontrei o teu serviço na Konekta."),"_blank")}
+function details(id){const p=allPros().find(x=>Number(x.id)===Number(id));if(p)alert(p.name+"\n"+p.job+"\nCategoria: "+p.category+"\nZona: "+p.zone+"\nPreço: "+(p.price||"A combinar")+"\n\n"+(p.desc||"Sem descrição."))}
+function showPage(page){document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));document.getElementById("page-"+page).classList.add("active");document.querySelectorAll(".nav").forEach(e=>e.classList.toggle("active",e.dataset.page===page));if(page==="account")renderUser();window.scrollTo({top:0,behavior:"smooth"})}
+function renderUser(){document.getElementById("authCard").classList.toggle("hidden",!!user);document.getElementById("signedCard").classList.toggle("hidden",!user);if(user){document.getElementById("signedName").textContent=user.name;document.getElementById("signedRole").textContent=user.role;document.getElementById("signedPhone").textContent=user.phone}}
+function logout(){user=null;localStorage.removeItem("konekta_user");renderUser();toast("Sessão local terminada.")}
+document.getElementById("adCategory").innerHTML=cats.map(c=>`<option>${c.name}</option>`).join("");
+document.getElementById("adForm").addEventListener("submit",e=>{e.preventDefault();const phone=document.getElementById("adPhone").value.trim();const item={id:Date.now(),name:document.getElementById("adName").value.trim(),job:document.getElementById("adJob").value.trim(),category:document.getElementById("adCategory").value,zone:document.getElementById("adZone").value.trim(),phone,price:document.getElementById("adPrice").value.trim()?Number(document.getElementById("adPrice").value.replace(/\D/g,"")).toLocaleString("pt-PT")+" Kz":"A combinar",desc:document.getElementById("adDesc").value.trim(),emoji:cats.find(c=>c.name===document.getElementById("adCategory").value)?.icon||"🧰"};ads.unshift(item);localStorage.setItem("konekta_ads",JSON.stringify(ads));e.target.reset();selectedCategory="Todas";drawCategories("categories");drawCategories("categories2");renderPros();showPage("home");toast("Anúncio guardado neste dispositivo.")});
+document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();user={name:document.getElementById("userName").value.trim(),phone:document.getElementById("userPhone").value.trim(),role:document.getElementById("userRole").value};localStorage.setItem("konekta_user",JSON.stringify(user));renderUser();toast("Perfil de demonstração criado neste dispositivo.")});
+drawCategories("categories");drawCategories("categories2");renderPros();renderUser();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./service-worker.js").catch(() => {});
+  });
+}
+</script>
+
+</body>
+</html>

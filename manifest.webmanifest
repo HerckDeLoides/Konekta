@@ -1,0 +1,21 @@
+{
+  "id": "./",
+  "name": "Konekta — Serviços perto de ti",
+  "short_name": "Konekta",
+  "description": "Encontra profissionais e serviços perto de ti.",
+  "lang": "pt-AO",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f5f7f4",
+  "theme_color": "#123b35",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
