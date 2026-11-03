@@ -112,5 +112,20 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
+ <!-- CONEXÃO COM SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://ddwzpqwnsmogyvnafocd.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rqi7DMR3FgEogQp0BWFW-w_Yl8O7rYT";
+
+const supabase = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+);
+
+console.log("Konekta conectado ao Supabase!");
+</script>
 </body>
 </html>
