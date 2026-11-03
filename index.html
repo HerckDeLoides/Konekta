@@ -51,17 +51,67 @@
  </form><div class="notice">Nesta versão inicial, o anúncio fica guardado apenas neste navegador. Ainda não é publicado na internet para outros utilizadores.</div>
  </div>
 </section>
+
 <section id="page-account" class="page">
- <div class="formcard" id="authCard"><h2>Entrar ou criar conta</h2><p>Escolhe como queres usar a Konekta.</p>
- <form id="authForm">
- <div class="field"><label for="userName">Nome</label><input id="userName" required placeholder="O teu nome"></div>
- <div class="field"><label for="userPhone">Número de telefone</label><input id="userPhone" required inputmode="tel" placeholder="Ex.: 2449XXXXXXXX"></div>
- <div class="field"><label for="userRole">Quero usar a Konekta como</label><select id="userRole"><option value="Cliente">Cliente — procurar serviços</option><option value="Profissional">Profissional — anunciar serviços</option></select></div>
- <button class="primary" type="submit">Continuar</button>
- </form><div class="notice">Demonstração: não existe ainda autenticação segura nem conta online. Não introduzas palavras-passe nem dados sensíveis.</div>
- </div>
- <div class="formcard hidden" id="signedCard"><div class="profiletop"><div class="bigavatar">👤</div><h2 id="signedName"></h2><p id="signedRole"></p><p id="signedPhone"></p></div><div class="profileactions"><button class="primary" onclick="showPage('publish')">Publicar um serviço</button><button class="secondary" onclick="logout()">Terminar sessão neste dispositivo</button></div></div>
-</section>
+  <div class="formcard" id="authCard">
+    <h2 id="authTitle">Criar conta na Konekta</h2>
+    <p id="authDescription">Regista-te para procurar ou anunciar serviços.</p>
+
+    <form id="authForm">
+      <div class="field" id="nameField">
+        <label for="userName">Nome completo</label>
+        <input id="userName" placeholder="O teu nome">
+      </div>
+
+      <div class="field" id="phoneField">
+        <label for="userPhone">Número de telefone</label>
+        <input id="userPhone" inputmode="tel" placeholder="Ex.: 2449XXXXXXXX">
+      </div>
+
+      <div class="field">
+        <label for="userEmail">E-mail</label>
+        <input id="userEmail" type="email" required placeholder="exemplo@email.com">
+      </div>
+
+      <div class="field">
+        <label for="userPassword">Palavra-passe</label>
+        <input id="userPassword" type="password" required minlength="6" placeholder="Mínimo de 6 caracteres">
+      </div>
+
+      <div class="field" id="roleField">
+        <label for="userRole">Quero usar a Konekta como</label>
+        <select id="userRole">
+          <option value="Cliente">Cliente — procurar serviços</option>
+          <option value="Profissional">Profissional — anunciar serviços</option>
+        </select>
+      </div>
+
+      <button class="primary" id="authSubmit" type="submit">Criar conta</button>
+    </form>
+
+    <button class="secondary" id="authToggle" type="button">
+      Já tenho conta — Entrar
+    </button>
+
+    <div class="notice">
+      A tua conta será gerida de forma segura pelo Supabase.
+    </div>
+  </div>
+
+  <div class="formcard hidden" id="signedCard">
+    <div class="profiletop">
+      <div class="bigavatar">👤</div>
+      <h2 id="signedName"></h2>
+      <p id="signedRole"></p>
+      <p id="signedPhone"></p>
+    </div>
+    <div class="profileactions">
+      <button class="primary" onclick="showPage('publish')">Publicar um serviço</button>
+      <button class="secondary" onclick="logout()">Terminar sessão</button>
+    </div>
+  </div>
+         </section>
+ 
 </main>
 <nav class="bottom">
  <button class="nav active" data-page="home" onclick="showPage('home')"><b>⌂</b>Início</button>
