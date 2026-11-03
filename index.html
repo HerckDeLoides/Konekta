@@ -146,11 +146,134 @@ function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;",
 function contact(phone,name){const clean=String(phone||"").replace(/\D/g,"");if(clean.length<9||/^24490000000[1-4]$/.test(clean)){toast("Este é um contacto de demonstração. Adiciona um número real no anúncio.");return}window.open("https://wa.me/"+clean+"?text="+encodeURIComponent("Olá "+name+", encontrei o teu serviço na Konekta."),"_blank")}
 function details(id){const p=allPros().find(x=>Number(x.id)===Number(id));if(p)alert(p.name+"\n"+p.job+"\nCategoria: "+p.category+"\nZona: "+p.zone+"\nPreço: "+(p.price||"A combinar")+"\n\n"+(p.desc||"Sem descrição."))}
 function showPage(page){document.querySelectorAll(".page").forEach(e=>e.classList.remove("active"));document.getElementById("page-"+page).classList.add("active");document.querySelectorAll(".nav").forEach(e=>e.classList.toggle("active",e.dataset.page===page));if(page==="account")renderUser();window.scrollTo({top:0,behavior:"smooth"})}
-function renderUser(){document.getElementById("authCard").classList.toggle("hidden",!!user);document.getElementById("signedCard").classList.toggle("hidden",!user);if(user){document.getElementById("signedName").textContent=user.name;document.getElementById("signedRole").textContent=user.role;document.getElementById("signedPhone").textContent=user.phone}}
-function logout(){user=null;localStorage.removeItem("konekta_user");renderUser();toast("Sessão local terminada.")}
+
+function renderUser() {
+  const authCard = document.getElementById("authCard");
+  const signedCard = document.getElementById("signedCard");
+
+  authCard.classList.toggle("hidden", !!user);
+  signedCard.classList.toggle("hidden", !user);
+
+  if (user) {
+    const metadata = user.user_metadata || {};
+
+    document.getElementById("signedName").textContent =
+      metadata.full_name || user.email || "Utilizador Konekta";
+
+    document.getElementById("signedRole").textContent =
+      metadata.role || "Utilizador";
+
+    document.getElementById("signedPhone").textContent =
+      metadata.phone || "";
+  }
+}
+
+async function logout() {
+  const { error } = await supabase.auth.signOut();
+
+  if (error) {
+    toast("Erro ao terminar sessão: " + error.message);
+    return;
+  }
+
+  user = null;
+  renderUser();
+  toast("Sessão terminada com sucesso.");
+}
+
 document.getElementById("adCategory").innerHTML=cats.map(c=>`<option>${c.name}</option>`).join("");
 document.getElementById("adForm").addEventListener("submit",e=>{e.preventDefault();const phone=document.getElementById("adPhone").value.trim();const item={id:Date.now(),name:document.getElementById("adName").value.trim(),job:document.getElementById("adJob").value.trim(),category:document.getElementById("adCategory").value,zone:document.getElementById("adZone").value.trim(),phone,price:document.getElementById("adPrice").value.trim()?Number(document.getElementById("adPrice").value.replace(/\D/g,"")).toLocaleString("pt-PT")+" Kz":"A combinar",desc:document.getElementById("adDesc").value.trim(),emoji:cats.find(c=>c.name===document.getElementById("adCategory").value)?.icon||"🧰"};ads.unshift(item);localStorage.setItem("konekta_ads",JSON.stringify(ads));e.target.reset();selectedCategory="Todas";drawCategories("categories");drawCategories("categories2");renderPros();showPage("home");toast("Anúncio guardado neste dispositivo.")});
-document.getElementById("authForm").addEventListener("submit",e=>{e.preventDefault();user={name:document.getElementById("userName").value.trim(),phone:document.getElementById("userPhone").value.trim(),role:document.getElementById("userRole").value};localStorage.setItem("konekta_user",JSON.stringify(user));renderUser();toast("Perfil de demonstração criado neste dispositivo.")});
+
+let isLoginMode = false;
+
+function updateAuthMode() {
+  document.getElementById("authTitle").textContent =
+    isLoginMode ? "Entrar na Konekta" : "Criar conta na Konekta";
+
+  document.getElementById("authDescription").textContent =
+    isLoginMode ? "Acede à tua conta." : "Regista-te para usar a Konekta.";
+
+  document.getElementById("nameField").classList.toggle("hidden", isLoginMode);
+  document.getElementById("phoneField").classList.toggle("hidden", isLoginMode);
+  document.getElementById("roleField").classList.toggle("hidden", isLoginMode);
+
+  document.getElementById("userName").required = !isLoginMode;
+  document.getElementById("userPhone").required = !isLoginMode;
+
+  document.getElementById("authSubmit").textContent =
+    isLoginMode ? "Entrar" : "Criar conta";
+
+  document.getElementById("authToggle").textContent =
+    isLoginMode ? "Ainda não tenho conta — Criar conta" : "Já tenho conta — Entrar";
+}
+
+document.getElementById("authToggle").addEventListener("click", () => {
+  isLoginMode = !isLoginMode;
+  updateAuthMode();
+});
+
+document.getElementById("authForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("userEmail").value.trim();
+  const password = document.getElementById("userPassword").value;
+
+  const button = document.getElementById("authSubmit");
+  button.disabled = true;
+
+  try {
+    if (isLoginMode) {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) throw error;
+
+      user = data.user;
+      renderUser();
+      toast("Sessão iniciada com sucesso!");
+    } else {
+      const name = document.getElementById("userName").value.trim();
+      const phone = document.getElementById("userPhone").value.trim();
+      const role = document.getElementById("userRole").value;
+
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            full_name: name,
+            phone,
+            role
+          }
+        }
+      });
+
+      if (error) throw error;
+
+      if (data.session) {
+        user = data.user;
+
+        await supabase.from("profiles")
+          .update({ phone })
+          .eq("id", user.id);
+
+        renderUser();
+        toast("Conta criada com sucesso!");
+      } else {
+        toast("Conta criada! Confirma o teu e-mail para entrar.");
+      }
+    }
+  } catch (error) {
+    toast("Erro: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
+
+updateAuthMode();
+
 drawCategories("categories");drawCategories("categories2");renderPros();renderUser();
 </script>
 
@@ -176,6 +299,26 @@ const supabase = window.supabase.createClient(
 );
 
 console.log("Konekta conectado ao Supabase!");
+ 
+async function restoreSession() {
+  const { data, error } = await supabase.auth.getSession();
+
+  if (error) {
+    console.error("Erro ao recuperar sessão:", error.message);
+    return;
+  }
+
+  user = data.session ? data.session.user : null;
+  renderUser();
+}
+
+supabase.auth.onAuthStateChange((event, session) => {
+  user = session ? session.user : null;
+  renderUser();
+});
+
+restoreSession();
+
 </script>
 </body>
 </html>
