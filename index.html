@@ -465,7 +465,8 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
- <!-- CONEXÃO COM SUPABASE -->
+ 
+<!-- CONEXÃO COM SUPABASE -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -473,32 +474,52 @@ const SUPABASE_URL = "https://ddwzpqwnsmogyvnafocd.supabase.co";
 
 const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rqi7DMR3FgEogQp0BWFW-w_Yl8O7rYT";
 
-const supabase = window.supabase.createClient(
+// Verificar se a biblioteca foi carregada
+const supabaseLibrary = window.supabase;
+
+if (!supabaseLibrary || typeof supabaseLibrary.createClient !== "function") {
+  console.error("Biblioteca Supabase não carregada.");
+  toast("Erro: não foi possível carregar a biblioteca Supabase.");
+
+} else {
+
+  // Criar o cliente global da Konekta
+  var supabase = supabaseLibrary.createClient(
     SUPABASE_URL,
     SUPABASE_PUBLISHABLE_KEY
-);
+  );
 
-console.log("Konekta conectado ao Supabase!");
- 
-async function restoreSession() {
-  const { data, error } = await supabase.auth.getSession();
+  // Verificar o módulo de autenticação
+  if (!supabase.auth || typeof supabase.auth.signUp !== "function") {
+    console.error("Módulo de autenticação indisponível.");
+    toast("Erro: módulo de autenticação não disponível.");
 
-  if (error) {
-    console.error("Erro ao recuperar sessão:", error.message);
-    return;
+  } else {
+
+    console.log("Konekta: Supabase e autenticação preparados!");
+
+    async function restoreSession() {
+      const { data, error } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error("Erro ao recuperar sessão:", error.message);
+        return;
+      }
+
+      user = data.session ? data.session.user : null;
+      renderUser();
+    }
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      user = session ? session.user : null;
+      renderUser();
+    });
+
+    restoreSession();
+    loadServices();
   }
-
-  user = data.session ? data.session.user : null;
-  renderUser();
 }
-
-supabase.auth.onAuthStateChange((event, session) => {
-  user = session ? session.user : null;
-  renderUser();
-});
-
-restoreSession();
-loadServices();
 </script>
+ 
 </body>
 </html>
