@@ -306,11 +306,14 @@ async function logout() {
 
 document.getElementById("adCategory").innerHTML=cats.map(c=>`<option>${c.name}</option>`).join("");
 
+
 document.getElementById("adForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const button = e.target.querySelector('button[type="submit"]');
   button.disabled = true;
+
+  let uploadedImagePath = null;
 
   try {
     const { data: userData, error: userError } =
@@ -321,7 +324,7 @@ document.getElementById("adForm").addEventListener("submit", async (e) => {
     const currentUser = userData.user;
 
     if (!currentUser) {
-      toast("Inicia sessão antes de publicar um serviço.");
+      toast("Inicia sessão antes de publicar.");
       showPage("account");
       return;
     }
@@ -347,6 +350,9 @@ document.getElementById("adForm").addEventListener("submit", async (e) => {
     const priceText =
       document.getElementById("adPrice").value.trim();
 
+    const imageFile =
+      document.getElementById("adImage").files[0] || null;
+
     const price = priceText
       ? Number(priceText.replace(/[^\d]/g, ""))
       : null;
@@ -355,6 +361,7 @@ document.getElementById("adForm").addEventListener("submit", async (e) => {
       throw new Error("Introduz um preço válido.");
     }
 
+    // Procurar a categoria na base de dados
     const { data: category, error: categoryError } =
       await supabase
         .from("categories")
@@ -364,6 +371,54 @@ document.getElementById("adForm").addEventListener("submit", async (e) => {
 
     if (categoryError) throw categoryError;
 
+    let imageUrl = null;
+
+    // Carregar fotografia, caso tenha sido seleccionada
+    if (imageFile) {
+      const allowedTypes = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp"
+      };
+
+      if (!allowedTypes[imageFile.type]) {
+        throw new Error("Formato inválido. Usa JPG, PNG ou WEBP.");
+      }
+
+      if (imageFile.size > 3 * 1024 * 1024) {
+        throw new Error("A fotografia não pode ultrapassar 3 MB.");
+      }
+
+      const extension = allowedTypes[imageFile.type];
+
+      uploadedImagePath =
+        currentUser.id + "/" +
+        Date.now() + "-" +
+        Math.random().toString(36).slice(2) +
+        "." + extension;
+
+      const { error: uploadError } = await supabase.storage
+        .from("service-images")
+        .upload(uploadedImagePath, imageFile, {
+          cacheControl: "3600",
+          upsert: false,
+          contentType: imageFile.type
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabase.storage
+        .from("service-images")
+        .getPublicUrl(uploadedImagePath);
+
+      imageUrl = publicData.publicUrl;
+
+      if (!imageUrl) {
+        throw new Error("Não foi possível obter o endereço da fotografia.");
+      }
+    }
+
+    // Guardar o anúncio e o endereço da fotografia
     const { error: insertError } = await supabase
       .from("services")
       .insert({
@@ -375,9 +430,47 @@ document.getElementById("adForm").addEventListener("submit", async (e) => {
         price: price,
         location: location,
         whatsapp: whatsapp,
+        image_url: imageUrl,
         is_published: true
       });
 
+    if (insertError) throw insertError;
+
+    // O anúncio foi guardado; não eliminar a fotografia
+    uploadedImagePath = null;
+
+    e.target.reset();
+
+    await loadServices();
+
+    selectedCategory = "Todas";
+    drawCategories("categories");
+    drawCategories("categories2");
+
+    showPage("home");
+    toast("Serviço publicado com sucesso!");
+
+  } catch (error) {
+    console.error("Erro ao publicar serviço:", error);
+
+    // Eliminar fotografia se o anúncio não tiver sido guardado
+    if (uploadedImagePath) {
+      try {
+        await supabase.storage
+          .from("service-images")
+          .remove([uploadedImagePath]);
+      } catch (cleanupError) {
+        console.error("Erro ao limpar fotografia:", cleanupError);
+      }
+    }
+
+    toast("Erro: " + error.message);
+
+  } finally {
+    button.disabled = false;
+  }
+});
+ 
     if (insertError) throw insertError;
 
     e.target.reset();
