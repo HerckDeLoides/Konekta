@@ -138,11 +138,60 @@ let selectedCategory="Todas";
 let ads=JSON.parse(localStorage.getItem("konekta_ads")||"[]");
 let user = null;
 localStorage.removeItem("konekta_user");
-const allPros=()=>[...ads,...seed];
+let remoteAds = [];
+
+const allPros = () => [...remoteAds, ...ads, ...seed];
 function toast(msg){const el=document.getElementById("toast");el.textContent=msg;el.classList.remove("hidden");setTimeout(()=>el.classList.add("hidden"),2600)}
 function drawCategories(target){document.getElementById(target).innerHTML=cats.map(c=>`<button class="cat ${selectedCategory===c.name?'active':''}" onclick="filterCategory('${c.name}')"><span class="emoji">${c.icon}</span>${c.name}</button>`).join("")}
 function filterCategory(name){selectedCategory=name;drawCategories("categories");drawCategories("categories2");document.getElementById("proTitle").textContent=name==="Todas"?"Profissionais em destaque":name;showPage("home");renderPros()}
 function renderPros(){const q=document.getElementById("search").value.trim().toLowerCase();let list=allPros().filter(p=>(selectedCategory==="Todas"||p.category===selectedCategory)&&[p.name,p.job,p.category,p.zone,p.desc].join(" ").toLowerCase().includes(q));document.getElementById("proCount").textContent=list.length+" resultado(s)";const root=document.getElementById("pros");if(!list.length){root.innerHTML='<div class="empty">Ainda não encontrámos profissionais com esses critérios.<br><br>Experimenta outra pesquisa ou publica um serviço.</div>';return}root.innerHTML=list.map(p=>`<article class="pro"><div class="photo">${escapeHtml(p.emoji||"🧰")}</div><div class="probody"><h3>${escapeHtml(p.name)}</h3><div class="job">${escapeHtml(p.job)} · ${escapeHtml(p.category)}</div><div class="zone">📍 ${escapeHtml(p.zone)}</div><div class="price">${escapeHtml(p.price||"Preço a combinar")}</div><div class="proactions"><button class="smallbtn whatsapp" onclick="contact('${String(p.phone).replace(/'/g,"")}','${escapeHtml(p.name).replace(/'/g,"")}')">WhatsApp ↗</button><button class="smallbtn outline" onclick="details(${Number(p.id)})">Detalhes</button></div></div></article>`).join("")}
+ 
+async function loadServices() {
+  const { data, error } = await supabase
+    .from("services")
+    .select(`
+      id,
+      provider_name,
+      title,
+      description,
+      price,
+      location,
+      whatsapp,
+      categories(name)
+    `)
+    .eq("is_published", true)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error("Erro ao carregar serviços:", error.message);
+    return;
+  }
+
+  remoteAds = (data || []).map(item => {
+    const category = Array.isArray(item.categories)
+      ? item.categories[0]
+      : item.categories;
+
+    const categoryName = category?.name || "Outros";
+
+    return {
+      id: item.id,
+      name: item.provider_name || "Profissional Konekta",
+      job: item.title,
+      category: categoryName,
+      zone: item.location || "Angola",
+      phone: item.whatsapp || "",
+      price: item.price == null
+        ? "A combinar"
+        : Number(item.price).toLocaleString("pt-PT") + " Kz",
+      desc: item.description || "",
+      emoji: cats.find(c => c.name === categoryName)?.icon || "🧰"
+    };
+  });
+
+  renderPros();
+ }
+ 
 function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 function contact(phone,name){const clean=String(phone||"").replace(/\D/g,"");if(clean.length<9||/^24490000000[1-4]$/.test(clean)){toast("Este é um contacto de demonstração. Adiciona um número real no anúncio.");return}window.open("https://wa.me/"+clean+"?text="+encodeURIComponent("Olá "+name+", encontrei o teu serviço na Konekta."),"_blank")}
 function details(id){const p=allPros().find(x=>Number(x.id)===Number(id));if(p)alert(p.name+"\n"+p.job+"\nCategoria: "+p.category+"\nZona: "+p.zone+"\nPreço: "+(p.price||"A combinar")+"\n\n"+(p.desc||"Sem descrição."))}
@@ -183,7 +232,100 @@ async function logout() {
 }
 
 document.getElementById("adCategory").innerHTML=cats.map(c=>`<option>${c.name}</option>`).join("");
-document.getElementById("adForm").addEventListener("submit",e=>{e.preventDefault();const phone=document.getElementById("adPhone").value.trim();const item={id:Date.now(),name:document.getElementById("adName").value.trim(),job:document.getElementById("adJob").value.trim(),category:document.getElementById("adCategory").value,zone:document.getElementById("adZone").value.trim(),phone,price:document.getElementById("adPrice").value.trim()?Number(document.getElementById("adPrice").value.replace(/\D/g,"")).toLocaleString("pt-PT")+" Kz":"A combinar",desc:document.getElementById("adDesc").value.trim(),emoji:cats.find(c=>c.name===document.getElementById("adCategory").value)?.icon||"🧰"};ads.unshift(item);localStorage.setItem("konekta_ads",JSON.stringify(ads));e.target.reset();selectedCategory="Todas";drawCategories("categories");drawCategories("categories2");renderPros();showPage("home");toast("Anúncio guardado neste dispositivo.")});
+
+document.getElementById("adForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const button = e.target.querySelector('button[type="submit"]');
+  button.disabled = true;
+
+  try {
+    const { data: userData, error: userError } =
+      await supabase.auth.getUser();
+
+    if (userError) throw userError;
+
+    const currentUser = userData.user;
+
+    if (!currentUser) {
+      toast("Inicia sessão antes de publicar um serviço.");
+      showPage("account");
+      return;
+    }
+
+    const providerName =
+      document.getElementById("adName").value.trim();
+
+    const title =
+      document.getElementById("adJob").value.trim();
+
+    const categoryName =
+      document.getElementById("adCategory").value;
+
+    const location =
+      document.getElementById("adZone").value.trim();
+
+    const whatsapp =
+      document.getElementById("adPhone").value.trim();
+
+    const description =
+      document.getElementById("adDesc").value.trim();
+
+    const priceText =
+      document.getElementById("adPrice").value.trim();
+
+    const price = priceText
+      ? Number(priceText.replace(/[^\d]/g, ""))
+      : null;
+
+    if (priceText && (!Number.isFinite(price) || price < 0)) {
+      throw new Error("Introduz um preço válido.");
+    }
+
+    const { data: category, error: categoryError } =
+      await supabase
+        .from("categories")
+        .select("id")
+        .eq("name", categoryName)
+        .single();
+
+    if (categoryError) throw categoryError;
+
+    const { error: insertError } = await supabase
+      .from("services")
+      .insert({
+        owner_id: currentUser.id,
+        category_id: category.id,
+        provider_name: providerName,
+        title: title,
+        description: description || null,
+        price: price,
+        location: location,
+        whatsapp: whatsapp,
+        is_published: true
+      });
+
+    if (insertError) throw insertError;
+
+    e.target.reset();
+
+    await loadServices();
+
+    selectedCategory = "Todas";
+    drawCategories("categories");
+    drawCategories("categories2");
+
+    showPage("home");
+    toast("Serviço publicado com sucesso!");
+
+  } catch (error) {
+    console.error("Erro ao publicar:", error);
+    toast("Não foi possível publicar: " + error.message);
+  } finally {
+    button.disabled = false;
+  }
+});
+ 
 
 let isLoginMode = false;
 
@@ -319,7 +461,7 @@ supabase.auth.onAuthStateChange((event, session) => {
 });
 
 restoreSession();
-
+loadServices();
 </script>
 </body>
 </html>
