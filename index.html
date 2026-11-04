@@ -158,6 +158,30 @@
 </nav>
 </div>
 <div id="toast" class="toast hidden"></div>
+ 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+const SUPABASE_URL = "https://ddwzpqwnsmogyvnafocd.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rqi7DMR3FgEogQp0BWFW-w_Yl8O7rYT";
+
+const supabaseLibrary = window.supabase;
+
+var supabase = null;
+
+if (supabaseLibrary && typeof supabaseLibrary.createClient === "function") {
+  supabase = supabaseLibrary.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+  console.log("Konekta: cliente Supabase inicializado.");
+} else {
+  console.error("Não foi possível carregar a biblioteca Supabase.");
+}
+</script>
+ 
 <script>
 const cats=[
  {name:"Informática",icon:"💻"},{name:"Eletricidade",icon:"⚡"},{name:"Canalização",icon:"🔧"},
@@ -465,61 +489,35 @@ if ("serviceWorker" in navigator) {
 }
 </script>
 
- 
-<!-- CONEXÃO COM SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script>
-const SUPABASE_URL = "https://ddwzpqwnsmogyvnafocd.supabase.co";
+if (supabase && supabase.auth) {
 
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rqi7DMR3FgEogQp0BWFW-w_Yl8O7rYT";
+  async function restoreSession() {
+    const { data, error } = await supabase.auth.getSession();
 
-// Verificar se a biblioteca foi carregada
-const supabaseLibrary = window.supabase;
-
-if (!supabaseLibrary || typeof supabaseLibrary.createClient !== "function") {
-  console.error("Biblioteca Supabase não carregada.");
-  toast("Erro: não foi possível carregar a biblioteca Supabase.");
-
-} else {
-
-  // Criar o cliente global da Konekta
-  var supabase = supabaseLibrary.createClient(
-    SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
-  );
-
-  // Verificar o módulo de autenticação
-  if (!supabase.auth || typeof supabase.auth.signUp !== "function") {
-    console.error("Módulo de autenticação indisponível.");
-    toast("Erro: módulo de autenticação não disponível.");
-
-  } else {
-
-    console.log("Konekta: Supabase e autenticação preparados!");
-
-    async function restoreSession() {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        console.error("Erro ao recuperar sessão:", error.message);
-        return;
-      }
-
-      user = data.session ? data.session.user : null;
-      renderUser();
+    if (error) {
+      console.error("Erro ao recuperar sessão:", error.message);
+      return;
     }
 
-    supabase.auth.onAuthStateChange((event, session) => {
-      user = session ? session.user : null;
-      renderUser();
-    });
-
-    restoreSession();
-    loadServices();
+    user = data.session ? data.session.user : null;
+    renderUser();
   }
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    user = session ? session.user : null;
+    renderUser();
+  });
+
+  restoreSession();
+  loadServices();
+
+} else {
+  console.error("Cliente Supabase não está disponível.");
 }
 </script>
- 
+</body>
+</html>
+
 </body>
 </html>
